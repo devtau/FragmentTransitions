@@ -1,9 +1,12 @@
 package com.devtau.fragmenttransitions;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,18 @@ public class DetailsFragment extends Fragment {
         args.putInt(ARG_KITTEN_NUMBER, kittenNumber);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    //анимацию перехода можно назначать во время компоновки транзакции в MainActivity или в onCreate DetailsFragment
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= 19) {
+            Transition changeTransform = TransitionInflater.from(getContext()).inflateTransition(R.transition.transition);
+            setSharedElementEnterTransition(changeTransform);
+            //по умолчанию возврат к списку анимируется так же
+//            setSharedElementReturnTransition(null);
+        }
     }
 
     @Nullable

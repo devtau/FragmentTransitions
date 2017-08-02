@@ -29,16 +29,19 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.Kitte
         DetailsFragment detailsFragment = DetailsFragment.newInstance(kittenNumber);
 
         // Note that we need the API version check here because the actual transition classes (e.g. Fade)
-        // are not in the support library and are only available in API 21+. The methods we are calling on the Fragment
+        // are not in the support library and are only available in API 19+. The methods we are calling on the Fragment
         // ARE available in the support library (though they don't do anything on API < 21)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Transition changeTransform = TransitionInflater.from(this).inflateTransition(R.transition.transition);
-            detailsFragment.setSharedElementEnterTransition(changeTransform);
-            ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(ListFragment.FRAGMENT_TAG);
-            listFragment.setSharedElementReturnTransition(changeTransform);
+        if (Build.VERSION.SDK_INT >= 19) {
+            //анимацию перехода можно назначать во время компоновки транзакции в MainActivity или в onCreate DetailsFragment
+//            Transition changeTransform = TransitionInflater.from(this).inflateTransition(R.transition.transition);
+//            detailsFragment.setSharedElementEnterTransition(changeTransform);
+            //по умолчанию возврат к списку анимируется так же
+//            detailsFragment.setSharedElementReturnTransition(null);
+            //для фрагмента списка не нужен SharedElement Transition
+
             //нельзя использовать android.R.transition.fade, т.к. это будет фейдить и героя тоже
             detailsFragment.setEnterTransition(new Fade());
-            listFragment.setExitTransition(new Fade());
+            getSupportFragmentManager().findFragmentByTag(ListFragment.FRAGMENT_TAG).setExitTransition(new Fade());
         }
 
         //обязательно replace. с add не работает
